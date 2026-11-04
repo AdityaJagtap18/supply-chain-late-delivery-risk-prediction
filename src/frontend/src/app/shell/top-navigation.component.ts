@@ -24,7 +24,10 @@ import { ShellStateService } from './shell-state.service';
         &#9776;
       </button>
       <form class="search" (ngSubmit)="searchOrder()">
-        <span aria-hidden="true">&#128269;</span>
+        <svg class="search-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7" />
+          <path d="M21 21l-4.3-4.3" stroke-linecap="round" />
+        </svg>
         <input
           type="text"
           placeholder="Search by Order ID"
@@ -41,7 +44,10 @@ import { ShellStateService } from './shell-state.service';
           (click)="showNotifications.set(!showNotifications())"
           aria-label="Notifications"
         >
-          &#128276;
+          <svg class="bell-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M13.7 21a2 2 0 01-3.4 0" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
         </button>
         @if (showNotifications()) {
           <div class="dropdown">No notifications.</div>
@@ -89,10 +95,23 @@ import { ShellStateService } from './shell-state.service';
         width: 100%;
         font-size: 14px;
       }
+      .search-icon {
+        flex: 0 0 auto;
+        width: 16px;
+        height: 16px;
+        color: var(--text-secondary);
+      }
+      .bell-icon {
+        width: 18px;
+        height: 18px;
+      }
       .spacer {
         flex: 1;
       }
       .icon-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         border: none;
         background: transparent;
         font-size: 18px;
