@@ -1,0 +1,82 @@
+# Local development orchestration for the four always-on Stage 5 components.
+# Per ADR-0006 (Accepted): containerized deployment for app components. No cloud provider or
+# orchestrator is selected here or implied by this file — this is local development only.
+#
+# Prerequisite: copy the repository root's .env.example to a file named .env **in this same
+# directory** (infra/docker/.env, not the repository root) — Docker Compose loads .env from the
+# compose file's own directory, not the repository root. This file does not commit any real
+# secret — .env.example's values are local-only placeholders. If POSTGRES_PORT's default (5432)
+# is already in use on your machine by another local PostgreSQL instance, change it in your own
+# infra/docker/.env (e.g. to 5433) — this does not require changing anything else, since the
+# backend reaches postgres by its service name and internal port, not the host-mapped one.
+#
+# Status: `postgres` and `backend` are built and verified working together (2026-11-03) — a
+# real PostgreSQL write/read round-trip via POST/GET /api/ping and a passing
+# GET /actuator/health, both over this compose file. `ml-service` and `frontend` still point at
+# src/ml-service and src/frontend, which have no Dockerfile or application code yet — those two
+# services will fail to build until their own Phase 1 tasks are done.
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ml-service:
+    build:
+      context: ../../src/ml-service
+    environment:
+      - ML_SERVICE_PORT=${ML_SERVICE_PORT}
+      - MODEL_ARTIFACT_PATH=${MODEL_ARTIFACT_PATH}
+      - ENCODER_ARTIFACT_PATH=${ENCODER_ARTIFACT_PATH}
+    ports:
+      - "${ML_SERVICE_PORT}:${ML_SERVICE_PORT}"
+    volumes:
+      # Mounted read-only, per ADR-0007 (file-based model storage) and
+      # IMPLEMENTATION-READINESS-001.md § 15 — the service must report missing artifacts
+      # explicitly rather than fabricate a prediction, not have them baked into the image.
+      - ../../artifacts:/app/artifacts:ro
+
+  backend:
+    build:
+      context: ../../src/backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - ML_SERVICE_URL=http://ml-service:${ML_SERVICE_PORT}
+      # Explicitly TBD (ARCH-CONSISTENCY-001 CONS-005) — not a production decision made here.
+      - BATCH_SCORING_CADENCE_CRON=${BATCH_SCORING_CADENCE_CRON}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ../../src/frontend
+    environment:
+      - API_BASE_URL=${API_BASE_URL}
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

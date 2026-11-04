@@ -1,0 +1,68 @@
+/* Design tokens per UI-DESIGN-001-REVISION-001 / UI-001-REVISION's palette. */
+:root {
+  --sidebar-bg: #0b1930;
+  --sidebar-active: #174a8b;
+  --primary: #1263d6;
+  --page-bg: #f5f7fa;
+  --surface: #ffffff;
+  --text-primary: #172033;
+  --text-secondary: #64748b;
+  --risk-high: #e5484d;
+  --risk-medium: #f2a51a;
+  --risk-low: #18a765;
+  --border: #e1e7ef;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background: var(--page-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}

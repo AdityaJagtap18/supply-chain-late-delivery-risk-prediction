@@ -1,0 +1,9 @@
+-r requirements.txt
+pytest==8.3.3
+httpx==0.27.2
+# Test-only, not a runtime dependency: QA-STRATEGY-001 S4.2's feature-availability contract test
+# imports scripts/ml/train_model.py to diff its retained feature set against this service's own
+# Features schema, and that script (correctly) depends on pandas/numpy for the offline training
+# it does -- the runtime requirements.txt above deliberately excludes them (see its own comment).
+pandas==3.1.0
+numpy==2.5.4

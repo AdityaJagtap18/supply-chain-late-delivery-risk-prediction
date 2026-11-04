@@ -1,0 +1,30 @@
+# --- Frontend (Angular) ---
+src/frontend/node_modules/
+src/frontend/dist/
+src/frontend/.angular/
+npm-debug.log*
+
+# --- Backend (Java/Maven) ---
+src/backend/target/
+*.class
+
+# --- ML service / scripts (Python) ---
+.venv/
+__pycache__/
+**/__pycache__/
+.pytest_cache/
+*.pyc
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Local secrets (never commit real values) ---
+infra/docker/.env
+.env
+!.env.example
+
+# --- Misc generated ---
+*.log

@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: backend
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:supplychain_dev}
+    username: ${POSTGRES_USER:supplychain_dev}
+    password: ${POSTGRES_PASSWORD:changeme_local_only}
+  jpa:
+    # Phase 3: schema ownership moved entirely to scripts/db/*.sql (the reconsideration Phase 1's
+    # comment here flagged as overdue). Hibernate only validates each entity against the schema
+    # scripts/run_migration.sh already applied; it never creates or alters tables at runtime.
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # /actuator/health only, for target-flow step 7 — not exposing env/beans/etc. by default.
+        include: health
+  endpoint:
+    health:
+      # DEV-STRATEGY-001 S5.3: "backend readiness = can reach DB" needs the DB component's own
+      # UP/DOWN (Spring Boot's default DataSourceHealthIndicator, auto-configured since
+      # spring-boot-starter-actuator + a DataSource are both present), not just the aggregate
+      # status. /actuator/health is permitAll (REQ unauthenticated callers like a load balancer
+      # still need *something*), so this shows per-component detail only to an authenticated
+      # caller, not anonymously -- an unauthenticated probe still gets the aggregate UP/DOWN.
+      show-details: when-authorized
+
+server:
+  port: 8080
+  servlet:
+    session:
+      # SEC-THREATMODEL-001 REQ-AUTH-002 -- a bounded idle-session lifetime. 30 minutes is an
+      # explicitly flagged placeholder (that document's own words: "reasonable for an internal
+      # operational tool... no team policy exists yet"), not a tuned production value.
+      timeout: 30m
+
+ml-service:
+  # ADR-0004 (Accepted) — a separate Python service, reached over the network, never in-process.
+  base-url: ${ML_SERVICE_URL:http://localhost:8001}

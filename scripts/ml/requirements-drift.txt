@@ -1,0 +1,4 @@
+# Only needed to run data_drift_check.py (reads live order data from Postgres) -- not needed by
+# train_model.py itself, which only ever reads final_sample.csv. Kept separate from
+# requirements.txt per that file's own "training-time dependencies only" scoping.
+psycopg2-binary==2.9.10

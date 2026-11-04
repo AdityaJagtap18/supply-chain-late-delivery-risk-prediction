@@ -1,0 +1,10 @@
+# Training-time dependencies only (ML-001 offline pipeline). The runtime ml-service
+# (src/ml-service/requirements.txt) does NOT need pandas/scipy -- it only loads and
+# applies an already-trained artifact.
+# Versions pinned to what was actually used to produce artifacts/model.joblib (2026-11-03,
+# Python 3.13) -- a different pin set may train a model with slightly different behavior.
+pandas==3.1.0
+numpy==2.5.4
+scikit-learn==1.9.1
+scipy==1.18.1
+joblib==1.6.0
