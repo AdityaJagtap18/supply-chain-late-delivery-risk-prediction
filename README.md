@@ -599,7 +599,7 @@ erDiagram
         string customer_segment
     }
     CUSTOMER_LOCATION {
-        int customer_id PK_FK
+        int customer_id PK,FK
         string customer_city
         string customer_state
         string customer_zipcode
@@ -639,7 +639,7 @@ erDiagram
         decimal product_price
     }
     SHIPMENT {
-        bigint order_id PK_FK
+        bigint order_id PK,FK
         string shipping_mode
         int scheduled_days
         int actual_days "nullable, post-hoc only"
