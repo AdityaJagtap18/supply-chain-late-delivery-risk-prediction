@@ -163,6 +163,10 @@ import { APP_VERSION, AUTHOR_NAME, AUTHOR_URL } from '../shared/app-version';
             </button>
           </form>
 
+          <button type="button" class="demo-fill" [disabled]="submitting()" (click)="fillDemo()">
+            Use demo credentials
+          </button>
+
           @if (error()) {
             <p class="error" role="alert">{{ error() }}</p>
           }
@@ -368,6 +372,22 @@ import { APP_VERSION, AUTHOR_NAME, AUTHOR_URL } from '../shared/app-version';
         opacity: 0.6;
         cursor: not-allowed;
       }
+      .demo-fill {
+        width: 100%;
+        margin-top: var(--space-2);
+        background: transparent;
+        color: var(--primary);
+        border: 1px dashed var(--border);
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .demo-fill:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
       .error {
         margin: var(--space-3) 0 0;
         padding: 10px 12px;
@@ -454,5 +474,16 @@ export class LoginComponent {
         this.submitting.set(false);
       },
     });
+  }
+
+  /**
+   * Dev/demo convenience only -- fills and submits the seeded local fixture credentials from
+   * scripts/db/002_seed_phase3.sql (`analyst` / `analyst123`). Not a production auth bypass: it
+   * goes through the same POST /auth/sessions call as typing the fields by hand.
+   */
+  fillDemo(): void {
+    this.username = 'analyst';
+    this.credential = 'analyst123';
+    this.submit();
   }
 }
