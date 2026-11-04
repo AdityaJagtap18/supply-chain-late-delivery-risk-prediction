@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { APP_VERSION, AUTHOR_NAME, AUTHOR_URL } from '../shared/app-version';
 
 /**
  * UI-003 Phase 1: all six modules are now real, routed screens (no disabled placeholders).
@@ -32,11 +33,24 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         <a routerLink="/ml-monitoring" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
           ML Monitoring
         </a>
+        <a routerLink="/understand-repository" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+          Understand Repository
+        </a>
+        <a routerLink="/patch-notes" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+          Patch Notes
+        </a>
         <a routerLink="/settings" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
           Settings
         </a>
       </nav>
-      <div class="version">v1.0.0</div>
+      <div class="footer">
+        <div class="footer-line">&copy; {{ year }} Supply Chain Late Delivery Risk Prediction</div>
+        <div class="footer-line">
+          Powered by
+          <a [href]="authorUrl" target="_blank" rel="noopener">{{ authorName }}</a>
+          &middot; v{{ appVersion }}
+        </div>
+      </div>
     </aside>
   `,
   styles: [
@@ -87,13 +101,34 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         background: var(--sidebar-active);
         color: #fff;
       }
-      .version {
+      .footer {
         margin-top: auto;
         padding: var(--space-3);
         color: #566178;
-        font-size: 12px;
+        font-size: 11px;
+        line-height: 1.6;
+      }
+      .footer-line {
+        white-space: normal;
+      }
+      .footer a {
+        color: #8aa6d6;
+        text-decoration: none;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 900px) {
+        .footer {
+          font-size: 12px;
+        }
       }
     `,
   ],
 })
-export class SidebarNavigationComponent {}
+export class SidebarNavigationComponent {
+  readonly appVersion = APP_VERSION;
+  readonly authorName = AUTHOR_NAME;
+  readonly authorUrl = AUTHOR_URL;
+  readonly year = new Date().getFullYear();
+}

@@ -9,6 +9,8 @@ import { BatchScoringPageComponent } from './batch-scoring/batch-scoring-page.co
 import { ReportsPageComponent } from './reports/reports-page.component';
 import { MlMonitoringPageComponent } from './ml-monitoring/ml-monitoring-page.component';
 import { SettingsPageComponent } from './settings/settings-page.component';
+import { UnderstandRepositoryPageComponent } from './understand-repository/understand-repository-page.component';
+import { PatchNotesPageComponent } from './patch-notes/patch-notes-page.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,6 +26,8 @@ export const routes: Routes = [
       { path: 'reports', component: ReportsPageComponent },
       { path: 'ml-monitoring', component: MlMonitoringPageComponent },
       { path: 'settings', component: SettingsPageComponent },
+      { path: 'understand-repository', component: UnderstandRepositoryPageComponent },
+      { path: 'patch-notes', component: PatchNotesPageComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
