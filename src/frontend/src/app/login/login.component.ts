@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { APP_VERSION, AUTHOR_NAME, AUTHOR_URL } from '../shared/app-version';
 
 /**
  * FR-034's login screen -- calls the real POST /auth/sessions, no stubbed auth. Visual design
@@ -172,6 +173,11 @@ import { AuthService } from '../services/auth.service';
               <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             Authorized use only. Your session is secured and monitored.
+          </div>
+
+          <div class="footer">
+            Powered by <a [href]="authorUrl" target="_blank" rel="noopener">{{ authorName }}</a>
+            &middot; v{{ appVersion }}
           </div>
         </div>
       </section>
@@ -388,6 +394,19 @@ import { AuthService } from '../services/auth.service';
         height: 18px;
         color: var(--primary);
       }
+      .footer {
+        margin-top: var(--space-4);
+        text-align: center;
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+      .footer a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
 
       @media (max-width: 900px) {
         .page {
@@ -414,6 +433,10 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+
+  readonly appVersion = APP_VERSION;
+  readonly authorName = AUTHOR_NAME;
+  readonly authorUrl = AUTHOR_URL;
 
   username = '';
   credential = '';
