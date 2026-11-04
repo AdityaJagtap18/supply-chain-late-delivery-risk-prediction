@@ -39,7 +39,7 @@ import { APP_VERSION, AUTHOR_NAME, AUTHOR_URL } from '../shared/app-version';
         <div class="hero-content">
           <div class="brand">
             <span class="mark" aria-hidden="true">&#9635;</span>
-            <span>Supply Chain<br />Optimization</span>
+            <span>ShipGuard</span>
           </div>
 
           <h1>Late Delivery<br />Risk Prediction</h1>
@@ -93,7 +93,7 @@ import { APP_VERSION, AUTHOR_NAME, AUTHOR_URL } from '../shared/app-version';
       <section class="panel">
         <div class="card">
           <h2>Sign In</h2>
-          <p class="subtitle">Access the Supply Chain Optimization application</p>
+          <p class="subtitle">Access the ShipGuard application</p>
 
           <form (ngSubmit)="submit()">
             <label class="field">

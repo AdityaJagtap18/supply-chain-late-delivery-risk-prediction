@@ -1,6 +1,8 @@
-# Supply Chain Optimization
+# ShipGuard
 
 ### Late Delivery Risk Prediction and Supply Chain Analytics
+
+> Repository name: `SupplyChainOptimization` (unchanged for URL/clone compatibility). "ShipGuard" is the product name as of 2026-11-04.
 
 ![Angular](https://img.shields.io/badge/Frontend-Angular%2018-dd0031?logo=angular&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Backend-Spring%20Boot%203.3.4-6db33f?logo=springboot&logoColor=white)

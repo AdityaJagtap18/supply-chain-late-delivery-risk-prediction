@@ -7,7 +7,7 @@ last_updated: 2026-11-03
 related_decisions: []
 ---
 
-# Project Context — SupplyChainOptimization
+# Project Context — ShipGuard
 
 **Read this file in full before executing any prompt in this library.** Every prompt in
 `prompt-library/` assumes the executor (human or AI agent) has this context loaded. This file
@@ -16,7 +16,7 @@ is itself a controlled artifact: update it whenever a fact below changes, and lo
 
 ## 1. What this project actually is today (verified facts)
 
-- **Project:** Supply Chain Late Delivery Risk Prediction (repo name: `SupplyChainOptimization`).
+- **Project:** ShipGuard — Late Delivery Risk Prediction (repo name: `SupplyChainOptimization`).
 - **Current implementation:** a single Jupyter notebook
   ([`supply_chain_late_delivery.ipynb`](../supply_chain_late_delivery.ipynb)) that ingests a
   supply-chain order dataset, cleans it, performs EDA and statistical feature selection, encodes

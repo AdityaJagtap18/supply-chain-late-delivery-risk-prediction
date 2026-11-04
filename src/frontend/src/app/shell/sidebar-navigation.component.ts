@@ -15,7 +15,7 @@ import { APP_VERSION, AUTHOR_NAME, AUTHOR_URL } from '../shared/app-version';
     <aside class="sidebar">
       <div class="brand">
         <span class="mark" aria-hidden="true">&#9635;</span>
-        <span>Supply Chain<br />Optimization</span>
+        <span>ShipGuard</span>
       </div>
       <nav>
         <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
@@ -44,7 +44,7 @@ import { APP_VERSION, AUTHOR_NAME, AUTHOR_URL } from '../shared/app-version';
         </a>
       </nav>
       <div class="footer">
-        <div class="footer-line">&copy; {{ year }} Supply Chain Late Delivery Risk Prediction</div>
+        <div class="footer-line">&copy; {{ year }} ShipGuard</div>
         <div class="footer-line">
           Powered by
           <a [href]="authorUrl" target="_blank" rel="noopener">{{ authorName }}</a>

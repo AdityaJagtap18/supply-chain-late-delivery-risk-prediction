@@ -1,7 +1,7 @@
-# Prompt Library — SupplyChainOptimization
+# Prompt Library — ShipGuard
 
 This directory is the **Prompt Library**: one of three interconnected systems established to
-support turning the existing [Supply Chain Late Delivery Risk Prediction notebook](../supply_chain_late_delivery.ipynb)
+support turning the existing [ShipGuard analysis notebook](../supply_chain_late_delivery.ipynb)
 prototype into a full web application, without prematurely committing to technology choices or
 skipping the engineering judgment a human reviewer needs to apply.
 

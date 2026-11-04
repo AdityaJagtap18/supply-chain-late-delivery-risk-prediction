@@ -16,6 +16,35 @@ import { ReleaseNote } from './release-notes.model';
  */
 export const RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: '1.1.0',
+    date: '2026-11-04',
+    title: 'Rebranded as ShipGuard',
+    summary:
+      'The product is now named ShipGuard (the repository/folder name and GitHub remote stay ' +
+      "SupplyChainOptimization for URL/clone compatibility). This release updates the application's " +
+      'visible name and title everywhere it is shown to a user or operator; no functional behavior ' +
+      'changed.',
+    changes: [
+      {
+        category: 'Changed',
+        description:
+          'Sidebar and login-screen brand mark, browser tab title, login subtitle, and the ' +
+          "Understand Repository page's \"Name\" field now read \"ShipGuard\".",
+      },
+      {
+        category: 'Changed',
+        description: 'ML inference service’s FastAPI title changed to "ShipGuard ML Inference Service".',
+      },
+      {
+        category: 'Changed',
+        description:
+          'README and the prompt-library/ADR documentation headers updated to the ShipGuard ' +
+          'product name, with additive branding notes added to the frozen PRD/PRD validation ' +
+          'sections rather than rewriting their historical content.',
+      },
+    ],
+  },
+  {
     version: '1.0.0',
     date: '2026-11-04',
     title: 'Initial release: Supply Chain Late Delivery Risk Prediction platform',

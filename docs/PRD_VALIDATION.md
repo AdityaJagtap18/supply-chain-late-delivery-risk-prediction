@@ -6,6 +6,9 @@ Companion to [docs/PRD.md](PRD.md). Date: 2026-11-03.
 > analysis). It is unaffected by the subsequent AI Engineering Knowledge System
 > ([prompt-library/](../prompt-library/)) and does not cover any future § 28+ web-application
 > content that `PRD-001` will add — that content will need its own validation pass once written.
+>
+> **Branding note (2026-11-04):** the product was subsequently named **ShipGuard**; this title
+> quotes the PRD as it read at the time of this validation pass and is left unchanged.
 
 ## 1. Files and Modules Inspected
 

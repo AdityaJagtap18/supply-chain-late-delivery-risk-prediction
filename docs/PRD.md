@@ -24,6 +24,13 @@ related_decisions: []
 | **Repository type** | Single-notebook data-science prototype (not a deployed application) |
 | **Companion document** | [docs/PRD_VALIDATION.md](PRD_VALIDATION.md) |
 
+> **Branding note (2026-11-04).** The product has been named **ShipGuard**. This is a naming
+> decision only — it does not alter any requirement, section, or approval status below. § 1–25's
+> "Name (from README)" field in § 2 is a historical quote of the README as it read during the
+> original reverse-engineering pass and is left unchanged per that section's own frozen status;
+> the current, live product name is ShipGuard. The repository/folder name remains
+> `SupplyChainOptimization` for URL/clone compatibility.
+
 > **Document History.** § 1–25 below are unchanged from the original reverse-engineering pass
 > and remain the authoritative description of the notebook prototype **as it exists today**. An
 > AI Engineering Knowledge System (prompt library, generated artifacts, ADRs) was subsequently

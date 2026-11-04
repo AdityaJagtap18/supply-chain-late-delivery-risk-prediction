@@ -35,7 +35,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="SupplyChainOptimization ML Inference Service", lifespan=lifespan)
+app = FastAPI(title="ShipGuard ML Inference Service", lifespan=lifespan)
 
 
 @app.get("/health", response_model=HealthResponse)

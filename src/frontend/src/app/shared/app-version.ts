@@ -9,7 +9,7 @@
  * To cut a new release: bump APP_VERSION (SemVer), update RELEASE_DATE, and add a matching entry
  * to release-notes.data.ts with the same version string.
  */
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.1.0';
 export const RELEASE_DATE = '2026-11-04';
 export const REPOSITORY_URL = 'https://github.com/AdityaJagtap18/supply-chain-late-delivery-risk-prediction';
 export const AUTHOR_NAME = 'AdityaJagtap';

@@ -20,7 +20,7 @@ import { RepositoryExplorerComponent } from './repository-explorer.component';
       <h2>Repository Overview</h2>
       <dl>
         <dt>Name</dt>
-        <dd>Supply Chain Late Delivery Risk Prediction</dd>
+        <dd>ShipGuard (repository: SupplyChainOptimization)</dd>
         <dt>Purpose</dt>
         <dd>
           Predicts which orders are at risk of a late delivery so operations teams can intervene

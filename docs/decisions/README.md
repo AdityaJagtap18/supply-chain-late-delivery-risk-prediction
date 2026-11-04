@@ -1,7 +1,7 @@
 # Architecture Decision Records (ADRs)
 
-This directory holds Architecture Decision Records for the SupplyChainOptimization web
-application effort. An ADR captures a technical or product decision that would be **costly to
+This directory holds Architecture Decision Records for the ShipGuard (repository:
+`SupplyChainOptimization`) web application effort. An ADR captures a technical or product decision that would be **costly to
 reverse** — not every design choice needs one; see
 [prompt-library/PROMPT_STANDARDS.md § 7](../../prompt-library/PROMPT_STANDARDS.md#7-traceability-rules--when-an-adr-is-required-vs-not)
 for the exact rule.

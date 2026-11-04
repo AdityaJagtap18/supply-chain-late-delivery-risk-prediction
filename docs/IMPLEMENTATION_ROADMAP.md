@@ -9,7 +9,7 @@ related_decisions: []
 
 # Implementation Roadmap
 
-This is the recommended **process workflow** for turning the SupplyChainOptimization notebook
+This is the recommended **process workflow** for turning the ShipGuard notebook
 prototype into a web application, expressed as stages of prompt-library execution and human
 review — not a technology-specific project plan (no dates/estimates are given, since those
 depend on decisions not yet made; see [docs/decisions/README.md](decisions/README.md)).
