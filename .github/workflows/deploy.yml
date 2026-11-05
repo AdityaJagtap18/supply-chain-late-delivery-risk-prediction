@@ -1,0 +1,104 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  # Lowercase, hardcoded: GHCR requires a lowercase image path and github.repository preserves
+  # the repo's actual casing (AdityaJagtap18/...), which would fail the push.
+  IMAGE_BASE: ghcr.io/adityajagtap18/supply-chain-late-delivery-risk-prediction
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: mvn test
+        working-directory: src/backend
+        run: mvn -B test
+
+  ml-service-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        working-directory: src/ml-service
+        run: pip install -r requirements.txt -r requirements-dev.txt
+      - name: pytest
+        working-directory: src/ml-service
+        run: pytest
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: src/frontend/package-lock.json
+      - name: npm ci
+        working-directory: src/frontend
+        run: npm ci
+      - name: npm run build (production)
+        working-directory: src/frontend
+        run: npm run build
+
+  # Builds each service's image on the (fast, free) GitHub-hosted runner and pushes it to GHCR.
+  # The VPS this deploys to has only 1 vCPU / 4GB RAM and already runs another project, so it
+  # only ever pulls a prebuilt image — it never runs `docker build` itself.
+  build-and-push:
+    needs: [backend-tests, ml-service-tests, frontend-build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        service: [backend, ml-service, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: src/${{ matrix.service }}
+          push: true
+          tags: ${{ env.IMAGE_BASE }}-${{ matrix.service }}:latest,${{ env.IMAGE_BASE }}-${{ matrix.service }}:${{ github.sha }}
+
+  deploy:
+    name: Deploy to Hostinger VPS
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and redeploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            set -e
+            cd ${{ secrets.VPS_DEPLOY_PATH }}
+            git fetch origin main
+            git reset --hard origin/main
+            docker compose -f infra/docker/docker-compose.prod.yml --env-file infra/docker/.env.prod pull
+            docker compose -f infra/docker/docker-compose.prod.yml --env-file infra/docker/.env.prod up -d
+            docker image prune -f

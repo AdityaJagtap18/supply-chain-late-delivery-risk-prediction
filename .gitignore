@@ -23,8 +23,10 @@ Thumbs.db
 
 # --- Local secrets (never commit real values) ---
 infra/docker/.env
+infra/docker/.env.prod
 .env
 !.env.example
+!.env.prod.example
 
 # --- Misc generated ---
 *.log
