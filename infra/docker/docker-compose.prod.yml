@@ -1,0 +1,79 @@
+# Production deployment on a shared single-vCPU/4GB VPS that already runs another project
+# behind host nginx + certbot (ports 80/443 taken). See docs/DEPLOYMENT.md for the full
+# walkthrough. Differs from docker-compose.yml (local dev) by:
+#   - Pulling prebuilt images from GHCR (built by .github/workflows/deploy.yml on a GitHub
+#     Actions runner) instead of building on the VPS itself — this box doesn't have the CPU/RAM
+#     to build the Maven/Spring Boot image comfortably alongside the other project already
+#     running here.
+#   - Publishing frontend/backend only to 127.0.0.1 (not 0.0.0.0) — the host's nginx reverse
+#     proxies shipguard.$DOMAIN / shipguard-api.$DOMAIN to these loopback ports and terminates
+#     TLS itself (same pattern as the other project on this VPS), so nothing needs its own
+#     public port.
+#   - postgres/ml-service publish no host port at all — reached only over the internal Docker
+#     network, by backend.
+#   - Running containers with `restart: unless-stopped` so they come back after a VPS reboot.
+#
+# Prerequisite: copy infra/docker/.env.prod.example to infra/docker/.env.prod on the VPS and
+# fill it in.
+#
+# Usage on the VPS (after `docker login ghcr.io`, see docs/DEPLOYMENT.md):
+#   docker compose -f infra/docker/docker-compose.prod.yml --env-file infra/docker/.env.prod pull
+#   docker compose -f infra/docker/docker-compose.prod.yml --env-file infra/docker/.env.prod up -d
+
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ml-service:
+    image: ghcr.io/adityajagtap18/supply-chain-late-delivery-risk-prediction-ml-service:latest
+    restart: unless-stopped
+    environment:
+      - ML_SERVICE_PORT=${ML_SERVICE_PORT}
+      - MODEL_ARTIFACT_PATH=${MODEL_ARTIFACT_PATH}
+      - ENCODER_ARTIFACT_PATH=${ENCODER_ARTIFACT_PATH}
+    volumes:
+      - ../../artifacts:/app/artifacts:ro
+
+  backend:
+    image: ghcr.io/adityajagtap18/supply-chain-late-delivery-risk-prediction-backend:latest
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - ML_SERVICE_URL=http://ml-service:${ML_SERVICE_PORT}
+      - BATCH_SCORING_CADENCE_CRON=${BATCH_SCORING_CADENCE_CRON}
+      # Production frontend origin, for Spring Security's CORS allow-list (SecurityConfig.java).
+      - ALLOWED_ORIGINS=https://${APP_DOMAIN}
+    ports:
+      - "127.0.0.1:8081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    image: ghcr.io/adityajagtap18/supply-chain-late-delivery-risk-prediction-frontend:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4201:4200"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
