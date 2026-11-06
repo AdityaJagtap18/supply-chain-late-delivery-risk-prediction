@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, ElementRef, inject, viewChild } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
 import { SidebarNavigationComponent } from './sidebar-navigation.component';
 import { TopNavigationComponent } from './top-navigation.component';
 import { ShellStateService } from './shell-state.service';
@@ -19,7 +20,7 @@ import { ShellStateService } from './shell-state.service';
       }
       <div class="main">
         <app-top-navigation />
-        <div class="content">
+        <div class="content" #content>
           <router-outlet />
         </div>
       </div>
@@ -43,6 +44,7 @@ import { ShellStateService } from './shell-state.service';
       .content {
         flex: 1;
         overflow-y: auto;
+        overflow-anchor: none;
         padding: var(--space-4);
       }
       .scrim {
@@ -73,4 +75,12 @@ import { ShellStateService } from './shell-state.service';
 })
 export class AppShellComponent {
   protected readonly shellState = inject(ShellStateService);
+  private readonly content = viewChild<ElementRef<HTMLDivElement>>('content');
+
+  constructor() {
+    const router = inject(Router);
+    router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      requestAnimationFrame(() => this.content()?.nativeElement.scrollTo({ top: 0 }));
+    });
+  }
 }
