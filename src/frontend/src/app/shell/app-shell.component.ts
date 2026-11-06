@@ -44,6 +44,7 @@ import { ShellStateService } from './shell-state.service';
       .content {
         flex: 1;
         overflow-y: auto;
+        overflow-anchor: none;
         padding: var(--space-4);
       }
       .scrim {
@@ -78,8 +79,8 @@ export class AppShellComponent {
 
   constructor() {
     const router = inject(Router);
-    router
-      .events.pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => this.content()?.nativeElement.scrollTo({ top: 0 }));
+    router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      requestAnimationFrame(() => this.content()?.nativeElement.scrollTo({ top: 0 }));
+    });
   }
 }
